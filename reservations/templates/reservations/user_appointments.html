@@ -1,0 +1,105 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>My Appointments</title>
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+</head>
+<body class="bg-gray-100 min-h-screen font-sans leading-relaxed text-gray-800">
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold">📅 My Appointments</h1>
+            <a href="{% url 'reservations:user_dashboard' %}" class="text-blue-600 hover:underline">← Back to Dashboard</a>
+        </div>
+
+        <!-- Grooming Section -->
+        <div class="bg-white rounded-xl shadow p-6 mb-10">
+            <h2 class="text-2xl font-semibold mb-4">🐾 Grooming Appointments</h2>
+            <div class="overflow-x-auto">
+                <table class="min-w-full table-fixed text-sm text-center">
+                    <thead class="bg-gray-200 text-gray-700 uppercase tracking-wider">
+                        <tr>
+                            <th class="px-4 py-2 w-1/6">Pet Name</th>
+                            <th class="px-4 py-2 w-1/6">Type</th>
+                            <th class="px-4 py-2 w-1/6">Date</th>
+                            <th class="px-4 py-2 w-1/6">Time</th>
+                            <th class="px-4 py-2 w-1/6">Package</th>
+                            <th class="px-4 py-2 w-1/12">Status</th>
+                            <th class="px-4 py-2 w-1/12">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        {% for appt in grooming_appointments %}
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-2">{{ appt.pet_name }}</td>
+                            <td class="px-4 py-2">{{ appt.pet_type }}</td>
+                            <td class="px-4 py-2">{{ appt.preferred_date }}</td>
+                            <td class="px-4 py-2">{{ appt.preferred_time }}</td>
+                            <td class="px-4 py-2">{{ appt.grooming_package }}</td>
+                            <td class="px-4 py-2">
+                                <span class="{% if appt.status == 'Approved' %}text-green-600
+                                            {% elif appt.status == 'Canceled' %}text-red-600
+                                            {% elif appt.status == 'Pending' %}text-yellow-600
+                                            {% else %}text-gray-600{% endif %} font-semibold">
+                                    {{ appt.status }}
+                                </span>
+                            </td>
+                            <td class="px-4 py-2">
+                                <a href="{% url 'reservations:grooming_detail' appt.pk %}" class="text-blue-600 hover:underline whitespace-nowrap">More Details</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="7" class="py-4 text-gray-500">No grooming appointments found.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Veterinary Section -->
+        <div class="bg-white rounded-xl shadow p-6">
+            <h2 class="text-2xl font-semibold mb-4">🩺 Veterinary Appointments</h2>
+            <div class="overflow-x-auto">
+                <table class="min-w-full table-fixed text-sm text-center">
+                    <thead class="bg-gray-200 text-gray-700 uppercase tracking-wider">
+                        <tr>
+                            <th class="px-4 py-2 w-1/6">Pet Name</th>
+                            <th class="px-4 py-2 w-1/6">Type</th>
+                            <th class="px-4 py-2 w-1/6">Date</th>
+                            <th class="px-4 py-2 w-1/6">Time</th>
+                            <th class="px-4 py-2 w-1/6">Visit Type</th>
+                            <th class="px-4 py-2 w-1/12">Status</th>
+                            <th class="px-4 py-2 w-1/12">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        {% for appt in veterinary_appointments %}
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-2">{{ appt.pet_name }}</td>
+                            <td class="px-4 py-2">{{ appt.pet_type }}</td>
+                            <td class="px-4 py-2">{{ appt.preferred_date }}</td>
+                            <td class="px-4 py-2">{{ appt.preferred_time }}</td>
+                            <td class="px-4 py-2">{{ appt.visit_type }}</td>
+                            <td class="px-4 py-2">
+                                <span class="{% if appt.status == 'Approved' %}text-green-600
+                                            {% elif appt.status == 'Canceled' %}text-red-600
+                                            {% elif appt.status == 'Pending' %}text-yellow-600
+                                            {% else %}text-gray-600{% endif %} font-semibold">
+                                    {{ appt.status }}
+                                </span>
+                            </td>
+                            <td class="px-4 py-2">
+                                <a href="{% url 'reservations:veterinary_detail' appt.pk %}" class="text-blue-600 hover:underline whitespace-nowrap">More Details</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="7" class="py-4 text-gray-500">No veterinary appointments found.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

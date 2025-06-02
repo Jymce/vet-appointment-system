@@ -1,0 +1,161 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Admin Reservations Management</title>
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+        function showModal(action, id, type) {
+            document.getElementById('modal-action').textContent = action;
+            document.getElementById('confirm-action').setAttribute('data-id', id);
+            document.getElementById('confirm-action').setAttribute('data-type', type);
+            document.getElementById('confirm-action').setAttribute('data-action', action);
+            document.getElementById('confirmation-modal').classList.remove('hidden');
+        }
+
+        function hideModal() {
+            document.getElementById('confirmation-modal').classList.add('hidden');
+        }
+
+        async function confirmAction() {
+            const btn = document.getElementById('confirm-action');
+            const id = btn.getAttribute('data-id');
+            const type = btn.getAttribute('data-type');
+            const action = btn.getAttribute('data-action');
+
+            const response = await fetch(`/adminpanel/update_status/${type}/${id}/${action}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                location.reload();
+            } else {
+                alert('Failed to update status.');
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100 text-gray-800 min-h-screen flex flex-col">
+
+<header class="bg-white shadow p-4 w-full">
+    <div class="flex justify-between items-center max-w-7xl mx-auto">
+        <h1 class="text-2xl font-bold">Manage Reservation</h1>
+        <a href="{% url 'adminpanel:admin_dashboard' %}" class="text-blue-600 hover:underline">← Back to Dashboard</a>
+        <form method="POST" action="{% url 'accounts:logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition">Logout</button>
+        </form>
+    </div>
+</header>
+
+<main class="flex-grow max-w-7xl mx-auto px-6 py-10 w-full">
+    <form method="get" class="mb-6 flex flex-wrap gap-4 items-center">
+        <div>
+            <label for="type" class="mr-2 font-semibold">Filter by Appointment Type:</label>
+            <select id="type" name="type" onchange="this.form.submit()" class="border rounded p-2">
+                <option value="all" {% if appointment_type == 'all' %}selected{% endif %}>All</option>
+                <option value="grooming" {% if appointment_type == 'grooming' %}selected{% endif %}>Grooming</option>
+                <option value="veterinary" {% if appointment_type == 'veterinary' %}selected{% endif %}>Veterinary</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="status" class="mr-2 font-semibold">Filter by Status:</label>
+            <select id="status" name="status" onchange="this.form.submit()" class="border rounded p-2">
+                <option value="all" {% if appointment_status == 'all' %}selected{% endif %}>All</option>
+                <option value="Pending" {% if appointment_status == 'Pending' %}selected{% endif %}>Pending</option>
+                <option value="Approved" {% if appointment_status == 'Approved' %}selected{% endif %}>Approved</option>
+                <option value="Canceled" {% if appointment_status == 'Canceled' %}selected{% endif %}>Canceled</option>
+            </select>
+        </div>
+    </form>
+
+
+    <div class="overflow-x-auto bg-white rounded-lg shadow border border-gray-300">
+        <table class="min-w-full table-auto border-collapse">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="border px-4 py-2">Appointment Type</th>
+                    <th class="border px-4 py-2">Owner Name</th>
+                    <th class="border px-4 py-2">Pet Name</th>
+                    <th class="border px-4 py-2">Pet Type</th>
+                    <th class="border px-4 py-2">Date</th>
+                    <th class="border px-4 py-2">Time</th>
+                    <th class="border px-4 py-2">Package / Visit Type</th>
+                    <th class="border px-4 py-2">Status</th>
+                    <th class="border px-4 py-2">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                {% for appt in grooming_appointments %}
+                <tr class="hover:bg-gray-50">
+                    <td class="border px-4 py-2">Grooming</td>
+                    <td class="border px-4 py-2">{{ appt.owner }}</td>
+                    <td class="border px-4 py-2">{{ appt.pet_name }}</td>
+                    <td class="border px-4 py-2">{{ appt.pet_type }}</td>
+                    <td class="border px-4 py-2">{{ appt.preferred_date }}</td>
+                    <td class="border px-4 py-2">{{ appt.preferred_time }}</td>
+                    <td class="border px-4 py-2">{{ appt.grooming_package }}</td>
+                    <td class="border px-4 py-2 font-semibold {% if appt.status == 'Approved' %}text-green-600{% elif appt.status == 'Canceled' %}text-red-600{% elif appt.status == 'Pending' %}text-yellow-600{% endif %}">{{ appt.status }}</td>
+                    <td class="border px-4 py-2">
+                        <div class="flex flex-wrap gap-2">
+                            {% if appt.status == 'Pending' %}
+                            <button onclick="showModal('approve', '{{ appt.pk }}', 'grooming')" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded">✓</button>
+                            <button onclick="showModal('cancel', '{{ appt.pk }}', 'grooming')" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">X</button>
+                            {% endif %}
+                            <a href="{% url 'adminpanel:grooming_appointment_detail' appt.pk %}" class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-sm" title="More Details">☰</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% for appt in veterinary_appointments %}
+                <tr class="hover:bg-gray-50">
+                    <td class="border px-4 py-2">Veterinary</td>
+                    <td class="border px-4 py-2">{{ appt.owner }}</td>
+                    <td class="border px-4 py-2">{{ appt.pet_name }}</td>
+                    <td class="border px-4 py-2">{{ appt.pet_type }}</td>
+                    <td class="border px-4 py-2">{{ appt.preferred_date }}</td>
+                    <td class="border px-4 py-2">{{ appt.preferred_time }}</td>
+                    <td class="border px-4 py-2">{{ appt.visit_type }}</td>
+                    <td class="border px-4 py-2 font-semibold {% if appt.status == 'Approved' %}text-green-600{% elif appt.status == 'Canceled' %}text-red-600{% elif appt.status == 'Pending' %}text-yellow-600{% endif %}">{{ appt.status }}</td>
+                    <td class="border px-4 py-2">
+                        <div class="flex flex-wrap gap-2">
+                            {% if appt.status == 'Pending' %}
+                            <button onclick="showModal('approve', '{{ appt.pk }}', 'veterinary')" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded">✓</button>
+                            <button onclick="showModal('cancel', '{{ appt.pk }}', 'veterinary')" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">X</button>
+                            {% endif %}
+                            <a href="{% url 'adminpanel:veterinary_appointment_detail' appt.pk %}" class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-sm" title="More Details">☰</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% if grooming_appointments|length == 0 and veterinary_appointments|length == 0 %}
+                <tr>
+                    <td colspan="9" class="text-center p-4 text-gray-500 italic">No appointments found.</td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<!-- Modal -->
+<div id="confirmation-modal" class="hidden fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
+    <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-sm">
+        <h3 class="text-lg font-semibold mb-4">Confirm <span id="modal-action">Action</span></h3>
+        <p class="mb-6">Are you sure you want to <span id="modal-action">action</span> this appointment?</p>
+        <div class="flex justify-end gap-3">
+            <button onclick="hideModal()" class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400">Cancel</button>
+            <button onclick="confirmAction()" id="confirm-action" class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700">Confirm</button>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

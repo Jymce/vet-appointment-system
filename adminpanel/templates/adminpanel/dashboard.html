@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Admin Dashboard</title>
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body class="bg-gray-100 text-gray-800 min-h-screen flex flex-col">
+
+<header class="bg-white shadow p-4 w-full">
+    <div class="flex justify-between items-center max-w-7xl mx-auto">
+        <h1 class="text-2xl font-bold">Welcome admin, {{ user.username }} 👋</h1>
+
+        <form method="POST" action="{% url 'accounts:logout' %}">
+            {% csrf_token %}
+            <button 
+                type="submit" 
+                class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition"
+            >
+                Logout
+            </button>
+        </form>
+    </div>
+</header>
+
+{% with "bg-white p-8 rounded-lg border border-gray-300 shadow transition transform flex flex-col justify-center items-center text-center hover:scale-105 hover:shadow-xl" as card_classes %}
+<main class="flex-grow max-w-7xl mx-auto px-6 py-10 w-full">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+        <a href="{% url 'adminpanel:admin_reservations' %}" class="{{ card_classes }}">
+            <h2 class="text-xl font-semibold mb-2">Manage Reservations</h2>
+            <p class="text-gray-500 text-sm">View and control all reservations.</p>
+        </a>
+        <a href="{% url 'adminpanel:manage_users' %}" class="{{ card_classes }}">
+            <h2 class="text-xl font-semibold mb-2">Manage Users</h2>
+            <p class="text-gray-500 text-sm">Administer user accounts and permissions.</p>
+        </a>
+        <a href="" class="{{ card_classes }}">
+            <h2 class="text-xl font-semibold mb-2">Settings</h2>
+            <p class="text-gray-500 text-sm">Configure system settings and preferences.</p>
+        </a>
+    </div>
+</main>
+{% endwith %}
+
+</body>
+</html>

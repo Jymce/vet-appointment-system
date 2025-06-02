@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Veterinary Appointment Details</title>
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+</head>
+<body class="bg-gray-100 p-10">
+    <div class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow">
+        <h1 class="text-3xl font-bold mb-6">🩺 Veterinary Appointment Details</h1>
+
+        <div class="space-y-4 text-lg">
+             <p>
+                <strong>Status:</strong> 
+                <span class="{% if appointment.status == 'Approved' %}text-green-600{% elif appointment.status == 'Canceled' %}text-red-600{% else %}text-yellow-600{% endif %} font-semibold">
+                    {{ appointment.status }}
+                </span>
+            </p>
+            <p><strong>Owner:</strong> {{ appointment.owner }}</p>
+            <p><strong>Pet Name:</strong> {{ appointment.pet_name }}</p>
+            <p><strong>Pet Type:</strong> {{ appointment.pet_type }}</p>
+            <p><strong>Breed:</strong> {{ appointment.breed }}</p>
+            <p><strong>Age:</strong> {{ appointment.age }}</p>
+            <p><strong>Preferred Date:</strong> {{ appointment.preferred_date }}</p>
+            <p><strong>Preferred Time:</strong> {{ appointment.preferred_time }}</p>
+            <p><strong>Contact Number:</strong> {{ appointment.contact_number }}</p>
+            <p><strong>Visit Type:</strong> {{ appointment.visit_type }}</p>
+            <p><strong>Symptoms:</strong> {{ appointment.symptoms }}</p>
+            <p><strong>Current Medication:</strong> {{ appointment.current_medications }}</p>
+            <p><strong>Notes:</strong> {{ appointment.notes }}</p>
+
+           
+        </div>
+
+        {% if appointment.status == "Pending" %}
+        <form method="POST" action="{% url 'reservations:cancel_veterinary' appointment.pk %}" class="mt-6">
+            {% csrf_token %}
+            <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded">
+                Cancel Appointment
+            </button>
+        </form>
+        {% endif %}
+
+        <div class="mt-6">
+            <a href="{% url 'reservations:user_appointments' %}" class="text-blue-600 hover:underline">← Back to My Appointments</a>
+        </div>
+    </div>
+</body>
+</html>

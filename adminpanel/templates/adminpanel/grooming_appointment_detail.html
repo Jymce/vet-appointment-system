@@ -1,0 +1,126 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Grooming Appointment Details</title>
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body class="bg-gray-100 min-h-screen text-gray-800 flex flex-col">
+
+<header class="bg-white shadow p-4">
+    <div class="max-w-screen-xl mx-auto flex justify-between items-center">
+        <h1 class="text-2xl font-bold">Grooming Appointment Details</h1>
+        <a href="{% url 'adminpanel:admin_reservations' %}" class="text-blue-600 hover:underline">← Back to Reservations</a>
+    </div>
+</header>
+
+<main class="flex-grow max-w-screen-xl mx-auto px-6 py-10">
+    <div class="bg-white p-8 rounded-lg shadow-md space-y-10">
+
+        <!-- Appointment Info Section -->
+        <section>
+            <h2 class="text-2xl font-semibold mb-6 text-gray-700">Appointment Info</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div>
+                    <label class="text-sm font-medium text-gray-700">Owner</label>
+                    <p class="mt-1">{{ appointment.owner }}</p>
+                </div>
+                <div>
+                    <label class="text-sm font-medium text-gray-700">Pet Name</label>
+                    <p class="mt-1">{{ appointment.pet_name }}</p>
+                </div>
+                <div>
+                    <label class="text-sm font-medium text-gray-700">Pet Type</label>
+                    <p class="mt-1">{{ appointment.pet_type }}</p>
+                </div>
+                <div>
+                    <label class="text-sm font-medium text-gray-700">Breed</label>
+                    <p class="mt-1">{{ appointment.breed }}</p>
+                </div>
+                <div>
+                    <label class="text-sm font-medium text-gray-700">Age</label>
+                    <p class="mt-1">{{ appointment.age }}</p>
+                </div>
+                <div>
+                    <label class="text-sm font-medium text-gray-700">Contact Number</label>
+                    <p class="mt-1">{{ appointment.contact_number }}</p>
+                </div>
+                <div>
+                    <label class="text-sm font-medium text-gray-700">Add Ons</label>
+                    <p class="mt-1">{{ appointment.add_ons }}</p>
+                </div>
+                <div>
+                    <label class="text-sm font-medium text-gray-700">Coat Type</label>
+                    <p class="mt-1">{{ appointment.coat_type }}</p>
+                </div>
+                <div>
+                    <label class="text-sm font-medium text-gray-700">Behavior Notes</label>
+                    <p class="mt-1">{{ appointment.behavior_notes }}</p>
+                </div>
+                <div>
+                    <label class="text-sm font-medium text-gray-700">Grooming Package</label>
+                    <p class="mt-1">{{ appointment.grooming_package }}</p>
+                </div>
+                <div>
+                    <label class="text-sm font-medium text-gray-700">Additional Notes</label>
+                    <p class="mt-1">{{ appointment.notes|default:"None" }}</p>
+                </div>
+                <div>
+                    <label class="text-sm font-medium text-gray-700">Status</label>
+                    <p class="mt-1 font-semibold
+                        {% if appointment.status == 'Approved' %}text-green-600
+                        {% elif appointment.status == 'Canceled' %}text-red-600
+                        {% elif appointment.status == 'Pending' %}text-yellow-600
+                        {% endif %}">
+                        {{ appointment.status }}
+                    </p>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Schedule Info Section -->
+<!-- Schedule Info Section -->
+        <section>
+            <h2 class="text-xl font-semibold text-gray-700 border-b pb-2 mb-6">Schedule Info</h2>
+
+            {% if appointment.status != "Pending" %}
+            <div class="mb-4 p-4 bg-yellow-100 text-yellow-800 rounded border border-yellow-300">
+                This appointment has been <strong>{{ appointment.status|lower }}</strong>. Schedule changes are disabled.
+            </div>
+            {% endif %}
+
+            <form method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {% csrf_token %}
+                <div>
+                    <label for="preferred_date" class="text-sm font-medium text-gray-700">Preferred Date</label>
+                    <input type="date" id="preferred_date" name="preferred_date"
+                        value="{{ appointment.preferred_date|date:'Y-m-d' }}"
+                        {% if appointment.status != "Pending" %}disabled{% endif %}
+                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                </div>
+
+                <div>
+                    <label for="preferred_time" class="text-sm font-medium text-gray-700">Preferred Time</label>
+                    <input type="time" id="preferred_time" name="preferred_time"
+                        value="{{ appointment.preferred_time|time:'H:i' }}"
+                        {% if appointment.status != "Pending" %}disabled{% endif %}
+                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                </div>
+
+                {% if appointment.status == "Pending" %}
+                <div class="md:col-span-2 flex justify-end">
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded shadow">
+                        Save Schedule
+                    </button>
+                </div>
+                {% endif %}
+            </form>
+        </section>
+    </div>
+</main>
+
+</body>
+</html>
