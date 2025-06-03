@@ -6,11 +6,15 @@
     <title>My Appointments</title>
     <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
 </head>
-<body class="bg-gray-100 min-h-screen font-sans leading-relaxed text-gray-800">
+
+
+<body class="bg-gradient-to-r from-indigo-500 to-purple-600 min-h-screen font-sans leading-relaxed text-gray-800">
+
+
     <div class="max-w-7xl mx-auto px-4 py-8">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-3xl font-bold">📅 My Appointments</h1>
-            <a href="{% url 'reservations:user_dashboard' %}" class="text-blue-600 hover:underline">← Back to Dashboard</a>
+            <a href="{% url 'reservations:user_dashboard' %}" class="text-white-600 hover:underline">← Back to Dashboard</a>
         </div>
 
         <!-- Grooming Section -->

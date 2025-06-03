@@ -7,7 +7,7 @@
     <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
-<body class="bg-gray-100 text-gray-800 min-h-screen flex flex-col">
+<body class="bg-gradient-to-r from-indigo-500 to-purple-600 text-gray-800 min-h-screen flex flex-col">
 
 <header class="bg-white shadow p-4 w-full">
     <div class="flex justify-between items-center max-w-7xl mx-auto">
@@ -36,7 +36,7 @@
             <h2 class="text-xl font-semibold mb-2">Appointments</h2>
             <p class="text-gray-500 text-sm">Check and manage your reservations.</p>
         </a>
-        <a href="#" class="{{ card_classes }}">
+        <a href="{% url 'reservations:account_settings' %}" class="{{ card_classes }}">
             <h2 class="text-xl font-semibold mb-2">Manage Account</h2>
             <p class="text-gray-500 text-sm">Update your profile and settings.</p>
         </a>

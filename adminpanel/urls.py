@@ -27,4 +27,6 @@ urlpatterns = [
     #Update Status
     path('update_status/<str:type>/<int:pk>/<str:action>/', views.update_status, name='update_status'),
 
+    path('account-settings/', views.admin_account_settings, name='admin_account_settings'),
+
 ]

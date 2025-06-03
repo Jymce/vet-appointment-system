@@ -17,6 +17,7 @@ urlpatterns = [
     path('cancel/grooming/<int:pk>/', views.cancel_grooming, name='cancel_grooming'),
     path('cancel/veterinary/<int:pk>/', views.cancel_veterinary, name='cancel_veterinary'),
 
+    path('settings/', views.account_settings, name='account_settings'),
 
 
 ]

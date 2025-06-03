@@ -6,8 +6,10 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import user_passes_test
 from .decorators import superuser_required
 from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth import update_session_auth_hash, authenticate, login
 
 from reservations.models import GroomingAppointment, VeterinaryAppointment
+from reservations.forms import AccountUpdateForm, CustomPasswordChangeForm
 
 
 @superuser_required
@@ -181,3 +183,36 @@ def update_status(request, type, pk, action):
 
     appointment.save()
     return JsonResponse({'success': True})
+
+@staff_member_required
+@user_passes_test(lambda u: u.is_staff)
+def admin_account_settings(request):
+    show_modal = False
+    if request.method == 'POST':
+        user_form = AccountUpdateForm(request.POST, instance=request.user)
+        password_form = CustomPasswordChangeForm(user=request.user, data=request.POST)
+
+        has_changes = (
+            user_form.has_changed() or
+            request.POST.get('old_password') or
+            request.POST.get('new_password1') or
+            request.POST.get('new_password2')
+        )
+
+        if not has_changes:
+            user_form.add_error(None, "No changes were made.")
+        elif user_form.is_valid() and (not request.POST.get('old_password') or password_form.is_valid()):
+            user_form.save()
+            if request.POST.get('old_password'):
+                user = password_form.save()
+                update_session_auth_hash(request, user)
+            show_modal = True
+    else:
+        user_form = AccountUpdateForm(instance=request.user)
+        password_form = CustomPasswordChangeForm(user=request.user)
+
+    return render(request, 'adminpanel/admin_account_settings.html', {
+        'user_form': user_form,
+        'password_form': password_form,
+        'show_modal': show_modal,
+    })

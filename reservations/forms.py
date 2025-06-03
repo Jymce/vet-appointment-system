@@ -1,5 +1,7 @@
 from django import forms
 from .models import GroomingAppointment, VeterinaryAppointment
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import PasswordChangeForm
 
 
 class GroomingAppointmentForm(forms.ModelForm):
@@ -42,3 +44,12 @@ class VeterinaryAppointmentForm(forms.ModelForm):
             field.widget.attrs.update({
                 'class': 'w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400',
             })
+
+class AccountUpdateForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'email']
+
+class CustomPasswordChangeForm(PasswordChangeForm):
+    pass
+

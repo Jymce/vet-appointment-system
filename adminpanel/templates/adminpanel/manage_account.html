@@ -7,24 +7,15 @@
     <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
-<body class="bg-gray-100 text-gray-800 min-h-screen flex flex-col">
+<body class="bg-gradient-to-r from-indigo-500 to-purple-600 text-gray-800 min-h-screen flex flex-col">
+
 
 <header class="bg-white shadow p-4 w-full">
-    <div class="flex justify-between items-center max-w-7xl mx-auto">
-        <h1 class="text-2xl font-bold">Manage User Accounts</h1>
-        <a href="{% url 'adminpanel:admin_dashboard' %}" class="text-blue-600 hover:underline">← Back to Dashboard</a>
-        <form method="POST" action="{% url 'accounts:logout' %}">
-            {% csrf_token %}
-            <button 
-                type="submit" 
-                class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition"
-            >
-                Logout
-            </button>
-        </form>
+    <div class="flex justify-between items-center max-w-4xl mx-auto">
+        <h1 class="text-2xl font-bold">Admin Account Settings</h1>
+        <a href="{% url 'adminpanel:admin_dashboard' %}" class="text-blue-600 underline">Back to Dashboard</a>
     </div>
 </header>
-
 <main class="flex-grow max-w-7xl mx-auto px-6 py-10 w-full">
     <div class="overflow-x-auto bg-white shadow rounded-lg border border-gray-300">
         <table class="min-w-full divide-y divide-gray-200">
