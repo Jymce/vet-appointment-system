@@ -33,7 +33,6 @@ ALLOWED_HOSTS = ['jymce.pythonanywhere.com']
 # DEBUG = True
 # ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [

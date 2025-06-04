@@ -41,19 +41,19 @@
         }
     </script>
 </head>
-<body class="bg-gradient-to-r from-indigo-500 to-purple-600 text-gray-800 min-h-screen flex flex-col">
+<body style="background-image: url('{% static "images/Pets3.jpg" %}'); background-size: cover; background-position: center;" class="text-gray-800 min-h-screen flex flex-col">
 
 
 <header class="bg-white shadow p-4 w-full">
     <div class="flex justify-between items-center max-w-4xl mx-auto">
-        <h1 class="text-2xl font-bold">Admin Account Settings</h1>
+        <h1 class="text-2xl font-bold">Manage Reservations</h1>
         <a href="{% url 'adminpanel:admin_dashboard' %}" class="text-blue-600 underline">Back to Dashboard</a>
     </div>
 </header>
 <main class="flex-grow max-w-7xl mx-auto px-6 py-10 w-full">
     <form method="get" class="mb-6 flex flex-wrap gap-4 items-center">
         <div>
-            <label for="type" class="mr-2 font-semibold">Filter by Appointment Type:</label>
+            <label for="type" class="text-white mr-2 font-semibold">Filter by Appointment Type:</label>
             <select id="type" name="type" onchange="this.form.submit()" class="border rounded p-2">
                 <option value="all" {% if appointment_type == 'all' %}selected{% endif %}>All</option>
                 <option value="grooming" {% if appointment_type == 'grooming' %}selected{% endif %}>Grooming</option>
@@ -62,7 +62,7 @@
         </div>
 
         <div>
-            <label for="status" class="mr-2 font-semibold">Filter by Status:</label>
+            <label for="status" class="text-white mr-2 font-semibold">Filter by Status:</label>
             <select id="status" name="status" onchange="this.form.submit()" class="border rounded p-2">
                 <option value="all" {% if appointment_status == 'all' %}selected{% endif %}>All</option>
                 <option value="Pending" {% if appointment_status == 'Pending' %}selected{% endif %}>Pending</option>

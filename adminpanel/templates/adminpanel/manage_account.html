@@ -7,12 +7,12 @@
     <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
-<body class="bg-gradient-to-r from-indigo-500 to-purple-600 text-gray-800 min-h-screen flex flex-col">
+<body style="background-image: url('{% static "images/Pets3.jpg" %}'); background-size: cover; background-position: center;" class="text-gray-800 min-h-screen flex flex-col">
 
 
 <header class="bg-white shadow p-4 w-full">
     <div class="flex justify-between items-center max-w-4xl mx-auto">
-        <h1 class="text-2xl font-bold">Admin Account Settings</h1>
+        <h1 class="text-2xl font-bold">Manage User Account Settings</h1>
         <a href="{% url 'adminpanel:admin_dashboard' %}" class="text-blue-600 underline">Back to Dashboard</a>
     </div>
 </header>
